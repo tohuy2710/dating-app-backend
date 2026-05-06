@@ -1,0 +1,75 @@
+service: dating-mobile-app
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-southeast-1
+  timeout: 30
+
+  environment:
+    DB_HOST: ${env:DB_HOST, ''}
+    DB_USER: ${env:DB_USER, ''}
+    DB_PASSWORD: ${env:DB_PASSWORD, ''}
+    DB_NAME: ${env:DB_NAME, ''}
+    S3_BUCKET_NAME: ${env:S3_BUCKET_NAME, ''} 
+    S3_IMAGE_BASE_URL: ${env:S3_IMAGE_BASE_URL, ''}
+    WEB_APP_URL: ${env:WEB_APP_URL, ''}
+    SAMPLE_USERNAME: ${env:SAMPLE_USERNAME, ''}
+    SAMPLE_PASSWORD: ${env:SAMPLE_PASSWORD, ''}
+    JWT_SECRET: ${env:JWT_SECRET, ''}
+
+  # iam:
+  #   role:
+  #     statements:
+  #       - Effect: Allow
+  #         Action:
+  #           - s3:PutObject
+  #           - s3:GetObject
+  #           - s3:DeleteObject
+  #         Resource: arn:aws:s3:::${env:S3_BUCKET_NAME, ''}/*
+
+package:
+  individually: true
+  patterns:
+    - '!node_modules/**/test/**'
+    - '!node_modules/**/__tests__/**'
+    - '!**/*.spec.js'
+    - '!**/*.test.js'
+    - '!tests/**'
+    - '!frontend/**'
+    - '!docs/**'
+    - '!**/*.md'
+
+functions: ${file(function.yml)}
+
+custom:
+  serverless-offline:
+    noAuth: true
+
+  authorizer:
+    dev: AuthLambdaLocal
+    prod:
+      type: REQUEST
+      authorizerId: {Ref: AuthLambda}
+
+  esbuild:
+    bundle: true
+    minify: true
+    sourcemap: false
+    target: node18
+    platform: node
+    concurrency: 10
+    external:
+      - sqlite3
+      - better-sqlite3
+      - pg
+      - pg-query-stream
+      - oracledb
+      - tedious
+      - mysql2 

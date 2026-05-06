@@ -1,0 +1,10 @@
+{
+  "name": "dating-mobile-app",
+  "version": "1.0.0",
+  "description": "Packaged externals for dating-mobile-app",
+  "private": true,
+  "scripts": {},
+  "dependencies": {
+    "mysql2": "^3.15.3"
+  }
+}

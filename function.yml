@@ -1,0 +1,7 @@
+login:
+  handler: handlers/auth_handler.login
+  events:
+    - http:
+        path: login
+        method: post
+        cors: true
