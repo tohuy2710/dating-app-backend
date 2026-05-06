@@ -60,6 +60,7 @@ DB_PORT=3306
 
 SAMPLE_USERNAME=user
 SAMPLE_PASSWORD=1
+JWT_SECRET=kothecungnhau
 ```
 ---
 
